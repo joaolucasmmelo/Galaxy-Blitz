@@ -16,7 +16,7 @@ public class Player {
     }
 
     public void load(){
-        playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave2.png").getImage();
+        playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave11.png").getImage();
 
         altura = playerIcon.getHeight(null);
         largura = playerIcon.getWidth(null);
@@ -27,37 +27,37 @@ public class Player {
         y+=dy;
     }
 
-    public void keyPressed(KeyEvent tecla) {
-        int codigo = tecla.getKeyCode();
+    public void convertMoviment(KeyEvent tecla){
+        char pressed = tecla.getKeyChar();
 
-        if (codigo == KeyEvent.VK_UP) {
-            dy = -7;
+        if (pressed == 'w'){
+            dy = -5;
         }
-        if (codigo == KeyEvent.VK_DOWN) {
-            dy = 7;
+        if (pressed == 's'){
+            dy = 5;
         }
-        if (codigo == KeyEvent.VK_LEFT) {
-            dx = -7;
+        if (pressed == 'a'){
+            dx = -5;
         }
-        if (codigo == KeyEvent.VK_RIGHT) {
-            dx = 7;
+        if (pressed == 'd'){
+            dx = 5;
         }
     }
 
     public void keyReleased(KeyEvent tecla){
-        int codigo = tecla.getKeyCode();
+        char pressed = tecla.getKeyChar();
 
-        if (codigo == KeyEvent.VK_UP){
-            dy=0;
+        if (pressed == 'w'){
+            dy = 0;
         }
-        if (codigo == KeyEvent.VK_DOWN){
-            dy=0;
+        if (pressed == 's'){
+            dy = 0;
         }
-        if (codigo == KeyEvent.VK_LEFT){
-            dx=0;
+        if (pressed == 'a'){
+            dx = 0;
         }
-        if (codigo == KeyEvent.VK_RIGHT){
-            dx=0;
+        if (pressed == 'd'){
+            dx = 0;
         }
     }
 

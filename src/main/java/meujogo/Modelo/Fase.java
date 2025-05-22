@@ -8,11 +8,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Fase extends JPanel implements ActionListener {
-    private Image background;
+    private final Image background;
     private int x1, x2;
-    private int speed = 5;
-    private Timer timer;
-    private Player player;
+    private final Player player;
 
     public Fase() {
         setFocusable(true);
@@ -27,7 +25,7 @@ public class Fase extends JPanel implements ActionListener {
         x1 = 0;
         x2 = background.getWidth(null);
 
-        timer = new Timer(15, this);
+        Timer timer = new Timer(15, this);
         timer.start();
     }
 
@@ -42,6 +40,7 @@ public class Fase extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        int speed = 5;
         x1 -= speed;
         x2 -= speed;
 
@@ -60,7 +59,7 @@ public class Fase extends JPanel implements ActionListener {
     private class TecladoAdapter extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent tecla){
-            player.keyPressed(tecla);
+            player.convertMoviment(tecla);
         }
         @Override
         public void keyReleased(KeyEvent tecla){
