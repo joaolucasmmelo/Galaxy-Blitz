@@ -5,60 +5,61 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Player {
-    private int x,y;
-    private int dx,dy;
-    private int altura,largura;
+    private int x, y;
+    private int velocidade = 5;
+    private boolean up, down, left, right, shift;
     private Image playerIcon;
 
-    public Player(){
+    public Player() {
         this.x = 100;
         this.y = 100;
     }
 
-    public void load(){
-        playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave11.png").getImage();
-
-        altura = playerIcon.getHeight(null);
-        largura = playerIcon.getWidth(null);
+    public void load() {
+        playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
     }
 
-    public void update(){
-        x+=dx;
-        y+=dy;
+    public void update() {
+        if (up){
+            y -= velocidade;
+        }
+        if (down){
+            y += velocidade;
+        }
+        if (left){
+            x -= velocidade;
+        }
+        if (right){
+            x += velocidade;
+        }
+        if (shift){
+            velocidade = 12;
+            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_boost_blur.png").getImage();
+        }
+        else {
+            velocidade = 5;
+            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
+        }
     }
 
-    public void convertMoviment(KeyEvent tecla){
-        char pressed = tecla.getKeyChar();
+    public void convertMoviment(KeyEvent tecla) {
+        int code = tecla.getKeyCode();
 
-        if (pressed == 'w'){
-            dy = -5;
-        }
-        if (pressed == 's'){
-            dy = 5;
-        }
-        if (pressed == 'a'){
-            dx = -5;
-        }
-        if (pressed == 'd'){
-            dx = 5;
-        }
+        if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) up = true;
+        if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = true;
+        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = true;
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = true;
+        if (code == KeyEvent.VK_SHIFT) shift = true;
     }
 
-    public void keyReleased(KeyEvent tecla){
-        char pressed = tecla.getKeyChar();
+    public void keyReleased(KeyEvent tecla) {
+        int code = tecla.getKeyCode();
 
-        if (pressed == 'w'){
-            dy = 0;
-        }
-        if (pressed == 's'){
-            dy = 0;
-        }
-        if (pressed == 'a'){
-            dx = 0;
-        }
-        if (pressed == 'd'){
-            dx = 0;
-        }
+        if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) up = false;
+        if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = false;
+        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = false;
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = false;
+        if (code == KeyEvent.VK_SHIFT) shift = false;
     }
 
     public int getX() {
