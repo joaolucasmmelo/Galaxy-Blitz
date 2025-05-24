@@ -1,5 +1,6 @@
 package meujogo.Modelo;
 
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,12 +8,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class Fase extends JPanel implements ActionListener {
+public class Phase extends JPanel implements ActionListener {
     private final Image background;
     private int x1, x2;
     private final Player player;
 
-    public Fase() {
+    public Phase() {
         setFocusable(true);
         setDoubleBuffered(true);
 
@@ -30,12 +31,20 @@ public class Fase extends JPanel implements ActionListener {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void paint(Graphics g) {
+        super.paint(g);
 
         g.drawImage(background, x1, 0, this);
         g.drawImage(background, x2, 0, this);
         g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
+
+        player.update();
+        List<Shot> shots = player.getShots();
+        for (int i =0; i < shots.size(); i++){
+            Shot s = shots.get(i);
+            s.load();
+            g.drawImage(s.getShotIcon(), s.getX(), s.getY(), this);
+        }
     }
 
     @Override
@@ -52,16 +61,25 @@ public class Fase extends JPanel implements ActionListener {
         }
 
         player.update();
+        List<Shot> shots = player.getShots();
+        for (int i =0; i < shots.size(); i++){
+            Shot s = shots.get(i);
+            if (s.isVisible()){
+                s.update();
+            }
+            else {
+                shots.remove(i);
+            }
+        }
 
         repaint();
     }
 
     private class TecladoAdapter extends KeyAdapter{
-        @Override
         public void keyPressed(KeyEvent tecla){
-            player.convertMoviment(tecla);
+            player.keyPressed(tecla);
         }
-        @Override
+
         public void keyReleased(KeyEvent tecla){
             player.keyReleased(tecla);
         }

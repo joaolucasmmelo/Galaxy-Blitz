@@ -1,9 +1,9 @@
-import meujogo.Modelo.Fase;
+import meujogo.Modelo.Phase;
 import javax.swing.JFrame;
 
 public class Container extends JFrame {
     public Container(){
-        add(new Fase());
+        add(new Phase());
         setTitle("Meu jogo");
         setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
