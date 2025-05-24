@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class Player {
     private int x, y;
@@ -13,8 +14,22 @@ public class Player {
     private boolean up, down, left, right, shift;
     private Image playerIcon;
     private List<Shot> shots;
-
     private boolean shotCountVer = false;
+
+    private Image gasIcon;
+    private List<BoostInfo> boostsAtivos = new ArrayList<>();
+    private boolean boostAtivo = false;
+    private int gas = 3;
+    private class BoostInfo {
+        long startTime;
+        boolean ended;
+
+        BoostInfo(long startTime) {
+            this.startTime = startTime;
+            this.ended = false;
+        }
+    }
+
 
     public Player() {
         this.x = 100;
@@ -24,32 +39,74 @@ public class Player {
     }
 
     public void load() {
-        playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave1.png").getImage();
+        playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
 
         altura = playerIcon.getHeight(null);
         largura = playerIcon.getWidth(null);
     }
 
     public void update() {
-        if (up){
-            y -= velocidade;
+        // Movimento
+        if (up) y -= velocidade;
+        if (down) y += velocidade;
+        if (left) x -= velocidade;
+        if (right) x += velocidade;
+
+        if (gas == 3){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_3.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
         }
-        if (down){
-            y += velocidade;
+        if (gas == 2){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_2.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
         }
-        if (left){
-            x -= velocidade;
+        if (gas == 1){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_1.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
         }
-        if (right){
-            x += velocidade;
+        if (gas == 0){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_0.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
         }
-        if (shift){
+
+        long now = System.currentTimeMillis();
+
+        // Verifica boost ativo
+        if (shift && !boostAtivo && gas > 0) {
+            boostAtivo = true;
+            gas--;
+            boostsAtivos.add(new BoostInfo(now));
+        }
+
+        // Atualiza status dos boosts
+        List<BoostInfo> boostsParaRemover = new ArrayList<>();
+
+        for (BoostInfo b : boostsAtivos) {
+            // Desativa boost após 5 segundos
+            if (!b.ended && now - b.startTime >= 3000) {
+                boostAtivo = false;
+                b.ended = true;
+            }
+
+            // Recarga boost após 15 segundos desde o fim
+            if (b.ended && now - b.startTime >= 28000) {
+                if (gas < 3) gas++;
+                boostsParaRemover.add(b);
+            }
+        }
+        boostsAtivos.removeAll(boostsParaRemover);
+
+        // Atualiza velocidade e sprite
+        if (boostAtivo) {
             velocidade = 6;
-            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_boost_blur1.png").getImage();
-        }
-        else {
+            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_boost_blur.png").getImage();
+        } else {
             velocidade = 3;
-            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave1.png").getImage();
+            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
         }
     }
 
@@ -64,11 +121,14 @@ public class Player {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = true;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = true;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = true;
-        if (code == KeyEvent.VK_SHIFT) shift = true;
 
-        if (code == KeyEvent.VK_P && shotCountVer == false){
+        if (code == KeyEvent.VK_SHIFT){
+            shift = true;
+        }
+
+        if (code == KeyEvent.VK_P && !shotCountVer){
             simpleShot();
-            shotCountVer =true;
+            shotCountVer = true;
         }
     }
 
@@ -79,7 +139,10 @@ public class Player {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = false;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = false;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = false;
-        if (code == KeyEvent.VK_SHIFT) shift = false;
+
+        if (code == KeyEvent.VK_SHIFT){
+            shift = false;
+        }
 
         if (code == KeyEvent.VK_P) shotCountVer = false;
     }
@@ -94,6 +157,10 @@ public class Player {
 
     public Image getPlayerIcon() {
         return playerIcon;
+    }
+
+    public Image getGasIcon() {
+        return gasIcon;
     }
 
     public List<Shot> getShots() {

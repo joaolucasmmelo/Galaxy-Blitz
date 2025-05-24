@@ -37,6 +37,7 @@ public class Phase extends JPanel implements ActionListener {
         g.drawImage(background, x1, 0, this);
         g.drawImage(background, x2, 0, this);
         g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
+        g.drawImage(player.getGasIcon(), 10, 10, this);
 
         player.update();
         List<Shot> shots = player.getShots();

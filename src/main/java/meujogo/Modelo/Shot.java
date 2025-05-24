@@ -19,7 +19,7 @@ public class Shot {
      }
 
      public void load() {
-         shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\shot22.png").getImage();
+         shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\shot.png").getImage();
 
          this.largura = shotIcon.getWidth(null);
          this.altura = shotIcon.getHeight(null);
