@@ -1,5 +1,6 @@
 package meujogo.Modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,7 @@ public class Phase extends JPanel implements ActionListener {
     private final Image background;
     private int x1, x2;
     private final Player player;
+    private List<Enemy1> enemy1;
 
     public Phase() {
         setFocusable(true);
@@ -30,19 +32,27 @@ public class Phase extends JPanel implements ActionListener {
         timer.start();
     }
 
+    public void enemyInit(){
+        int[] cordenadas = new int[40];
+        enemy1 = new ArrayList<Enemy1>();
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
 
         g.drawImage(background, x1, 0, this);
         g.drawImage(background, x2, 0, this);
+
+        g.drawImage(player.getBoostIcon(), player.getX() - 55, player.getY() - 25, this);
         g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
+
         g.drawImage(player.getGasIcon(), 10, 10, this);
+        g.drawImage(player.getLifeIcon(), 170, 18, this);
 
         player.update();
         List<Shot> shots = player.getShots();
-        for (int i =0; i < shots.size(); i++){
-            Shot s = shots.get(i);
+        for (Shot s : shots) {
             s.load();
             g.drawImage(s.getShotIcon(), s.getX(), s.getY(), this);
         }

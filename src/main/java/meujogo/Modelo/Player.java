@@ -10,16 +10,20 @@ import java.util.Timer;
 public class Player {
     private int x, y;
     private int altura, largura;
-    private int velocidade;
+    private int velocidade, life = 3;
     private boolean up, down, left, right, shift;
     private Image playerIcon;
+    private Image boostIcon;
+    private Image lifeIcon;
     private List<Shot> shots;
     private boolean shotCountVer = false;
+
 
     private Image gasIcon;
     private List<BoostInfo> boostsAtivos = new ArrayList<>();
     private boolean boostAtivo = false;
     private int gas = 3;
+
     private class BoostInfo {
         long startTime;
         boolean ended;
@@ -29,7 +33,6 @@ public class Player {
             this.ended = false;
         }
     }
-
 
     public Player() {
         this.x = 100;
@@ -52,26 +55,8 @@ public class Player {
         if (left) x -= velocidade;
         if (right) x += velocidade;
 
-        if (gas == 3){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_3.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
-        }
-        if (gas == 2){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_2.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
-        }
-        if (gas == 1){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_1.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
-        }
-        if (gas == 0){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_0.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
-        }
+        checkGasStatus();
+        checkLife();
 
         long now = System.currentTimeMillis();
 
@@ -103,10 +88,13 @@ public class Player {
         // Atualiza velocidade e sprite
         if (boostAtivo) {
             velocidade = 6;
-            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_boost_blur.png").getImage();
+            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_blur.png").getImage();
+            boostIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\fire.png").getImage();
+
         } else {
             velocidade = 3;
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
+            boostIcon = null;
         }
     }
 
@@ -147,6 +135,52 @@ public class Player {
         if (code == KeyEvent.VK_P) shotCountVer = false;
     }
 
+    public void checkGasStatus(){
+        if (gas == 3){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_3.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+        if (gas == 2){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_2.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+        if (gas == 1){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_1.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+        if (gas == 0){
+            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_0.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+    }
+
+    public void checkLife(){
+        if (life == 3){
+            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life3.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+        if (life == 2){
+            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life3.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+        if (life == 1){
+            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life3.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+        if (life == 0){
+            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life3.png").getImage();
+            altura = gasIcon.getHeight(null);
+            largura = gasIcon.getWidth(null);
+        }
+    }
+
     public int getX() {
         return x;
     }
@@ -159,8 +193,16 @@ public class Player {
         return playerIcon;
     }
 
+    public Image getBoostIcon() {
+        return boostIcon;
+    }
+
     public Image getGasIcon() {
         return gasIcon;
+    }
+
+    public Image getLifeIcon() {
+        return lifeIcon;
     }
 
     public List<Shot> getShots() {
