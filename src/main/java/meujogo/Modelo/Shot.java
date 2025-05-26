@@ -10,7 +10,7 @@ public class Shot {
     private boolean isVisible;
 
     private static final int LARGURA = 1220;
-    private static int VELOCIDADE = 5;
+    private static int VELOCIDADE = 20;
 
      public Shot(int x, int y){
          this.x = x-85;
@@ -19,7 +19,7 @@ public class Shot {
      }
 
     public Rectangle getBounds(){
-        return new  Rectangle(x, y, altura, largura);
+        return new  Rectangle(this.x, this.y, largura, altura);
     }
 
      public void load() {

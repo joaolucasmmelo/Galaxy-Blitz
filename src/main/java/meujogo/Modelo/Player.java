@@ -42,7 +42,7 @@ public class Player {
     }
 
     public Rectangle getBounds(){
-        return new  Rectangle(x, y, altura, largura);
+        return new  Rectangle(this.x, this.y, 85, 35);
     }
 
     public void load() {
@@ -150,46 +150,30 @@ public class Player {
     public void checkGasStatus(){
         if (gas == 3){
             gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_3.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
         if (gas == 2){
             gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_2.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
         if (gas == 1){
             gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_1.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
         if (gas == 0){
             gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_0.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
     }
 
     public void checkLife(){
         if (life == 3){
             lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life3.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
         if (life == 2){
             lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life2.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
         if (life == 1){
             lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life1.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
         if (life == 0){
             lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life0.png").getImage();
-            altura = gasIcon.getHeight(null);
-            largura = gasIcon.getWidth(null);
         }
     }
 

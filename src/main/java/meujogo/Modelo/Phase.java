@@ -38,12 +38,12 @@ public class Phase extends JPanel implements ActionListener {
     }
 
     public void enemyInit(){
-        int[] enemysQuant = new int[40];
+        int[] enemysQuant = new int[100];
         enemy1 = new ArrayList<Enemy1>();
 
         for (int i : enemysQuant) {
             int x = (int)(Math.random() * 8500 + 1280);
-            int y = (int)(Math.random() * 700 + 20);
+            int y = (int)(Math.random() * 680 + 100);
             enemy1.add(new Enemy1(x, y));
         }
     }
@@ -144,14 +144,15 @@ public class Phase extends JPanel implements ActionListener {
         }
 
         List<Shot> shots = player.getShots();
-        for (int j = 0; j < shots.size(); j++){
+        for (int j = 0; j < shots.size(); j++) {
             Shot tempShot = shots.get(j);
             shotShape = tempShot.getBounds();
-            for (int k = 0; k < shots.size(); k++){
-                Enemy1 tempEnemy1 = enemy1.get(k);
-                Enemy1Shape = tempEnemy1.getBounds();
 
-                if (shotShape.intersects(Enemy1Shape)){
+            for (int k = 0; k < enemy1.size(); k++) {
+                Enemy1 tempEnemy1 = enemy1.get(k);
+                Rectangle enemy1Shape = tempEnemy1.getBounds();
+
+                if (shotShape.intersects(enemy1Shape)) {
                     tempEnemy1.setVisible(false);
                     tempShot.setVisible(false);
                 }

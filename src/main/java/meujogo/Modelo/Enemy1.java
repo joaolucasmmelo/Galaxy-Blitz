@@ -10,7 +10,7 @@ public class Enemy1 {
     private boolean isVisible;
 
     //private static final int LARGURA = 1220;
-    private static int VELOCIDADE = 2;
+    private static int VELOCIDADE = 4;
 
      public Enemy1(int x, int y){
          this.x = x-20;
@@ -19,7 +19,7 @@ public class Enemy1 {
      }
 
      public Rectangle getBounds(){
-         return new  Rectangle(x, y, altura, largura);
+         return new  Rectangle(this.x, this.y, 80, 50);
      }
 
      public void load() {
