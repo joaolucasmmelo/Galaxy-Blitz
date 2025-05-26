@@ -18,8 +18,12 @@ public class Enemy1 {
          isVisible = true;
      }
 
+     public Rectangle getBounds(){
+         return new  Rectangle(x, y, altura, largura);
+     }
+
      public void load() {
-         shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy2.png").getImage();
+         shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy22.png").getImage();
 
          this.largura = shotIcon.getWidth(null);
          this.altura = shotIcon.getHeight(null);
@@ -56,7 +60,7 @@ public class Enemy1 {
         return y;
     }
 
-    public Image getShotIcon() {
+    public Image getEnemyIcon() {
         return shotIcon;
     }
 }

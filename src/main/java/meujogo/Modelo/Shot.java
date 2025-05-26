@@ -10,13 +10,17 @@ public class Shot {
     private boolean isVisible;
 
     private static final int LARGURA = 1220;
-    private static int VELOCIDADE = 20;
+    private static int VELOCIDADE = 5;
 
      public Shot(int x, int y){
          this.x = x-85;
          this.y = y;
          isVisible = true;
      }
+
+    public Rectangle getBounds(){
+        return new  Rectangle(x, y, altura, largura);
+    }
 
      public void load() {
          shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\shot.png").getImage();
