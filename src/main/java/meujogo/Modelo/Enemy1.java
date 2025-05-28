@@ -10,7 +10,7 @@ public class Enemy1 {
     private boolean isVisible;
 
     //private static final int LARGURA = 1220;
-    private static int VELOCIDADE = 4;
+    private int velocidade = 4;
 
      public Enemy1(int x, int y){
          this.x = x-20;
@@ -30,7 +30,7 @@ public class Enemy1 {
      }
 
      public void update(){
-         this.x -= VELOCIDADE;
+         this.x -= velocidade;
          /*if (this.x > LARGURA){
              isVisible = false;
          }*/
@@ -44,12 +44,12 @@ public class Enemy1 {
         this.isVisible = isVisible;
     }
 
-    public static int getVELOCIDADE() {
-        return VELOCIDADE;
+    public int getVelocidade() {
+        return velocidade;
     }
 
-    public static void setVELOCIDADE(int VELOCIDADE) {
-        Enemy1.VELOCIDADE = VELOCIDADE;
+    public void setVelocidade(int velocidade) {
+        this.velocidade = velocidade;
     }
 
     public int getX() {

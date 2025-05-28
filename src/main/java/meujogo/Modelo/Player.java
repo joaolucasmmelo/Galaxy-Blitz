@@ -17,7 +17,6 @@ public class Player {
     private List<Shot> shots;
     private boolean shotCountVer = false;
 
-
     private Image gasIcon;
     private List<BoostInfo> boostsAtivos = new ArrayList<>();
 
@@ -53,35 +52,35 @@ public class Player {
     }
 
     public void update() {
-        // Movimento
         if (up) y -= velocidade;
         if (down) y += velocidade;
         if (left) x -= velocidade;
         if (right) x += velocidade;
+
+        if (x < 0) x = 0;
+        if (x > 1240) x = 1240;
+        if (y < 0) y = 0;
+        if (y > 720 - playerIcon.getHeight(null)) y = 720 - playerIcon.getHeight(null);
 
         checkGasStatus();
         checkLife();
 
         long now = System.currentTimeMillis();
 
-        // Verifica boost ativo
         if (shift && !boostAtivo && gas > 0) {
             boostAtivo = true;
             gas--;
             boostsAtivos.add(new BoostInfo(now));
         }
 
-        // Atualiza status dos boosts
         List<BoostInfo> boostsParaRemover = new ArrayList<>();
 
         for (BoostInfo b : boostsAtivos) {
-            // Desativa boost após 5 segundos
             if (!b.ended && now - b.startTime >= 3000) {
                 boostAtivo = false;
                 b.ended = true;
             }
 
-            // Recarga boost após 15 segundos desde o fim
             if (b.ended && now - b.startTime >= 28000) {
                 if (gas < 3) gas++;
                 boostsParaRemover.add(b);
@@ -89,7 +88,6 @@ public class Player {
         }
         boostsAtivos.removeAll(boostsParaRemover);
 
-        // Atualiza velocidade e sprite
         if (boostAtivo) {
             velocidade = 6;
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_blur.png").getImage();
@@ -101,7 +99,7 @@ public class Player {
             boostIcon = null;
         }
 
-        if (!verLife && System.currentTimeMillis() - lastLifeLossTime >= 3000) {
+        if (!verLife && System.currentTimeMillis() - lastLifeLossTime >= 2000) {
             verLife = true;
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
         }
@@ -177,6 +175,16 @@ public class Player {
         }
     }
 
+    public void reset() {
+        this.x = 100;
+        this.y = 100;
+        this.velocidade = 3;
+        this.gas = 3;
+        this.life = 3;
+        this.boostAtivo = false;
+        this.shots.clear();
+    }
+
     boolean verLife = true;
     private long lastLifeLossTime = 0;
 
@@ -207,6 +215,10 @@ public class Player {
 
     public int getY() {
         return y;
+    }
+
+    public void setVelocidade(int velocidade){
+        this.velocidade = velocidade;
     }
 
     public Image getPlayerIcon() {

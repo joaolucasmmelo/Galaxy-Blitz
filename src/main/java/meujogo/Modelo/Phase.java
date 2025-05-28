@@ -1,3 +1,5 @@
+// Phase.java
+
 package meujogo.Modelo;
 
 import java.util.ArrayList;
@@ -10,19 +12,28 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Phase extends JPanel implements ActionListener {
-    private final Image background, gameover;
+    private final Image background, skull, gameoverPlayAgain, gameoverExit, explosion;
     private int x1, x2;
     private final Player player;
     private List<Enemy1> enemy1;
     private boolean inGame;
+    private boolean showGameOver;
+    private int selectedOption = 0;
+    Integer kills = 0;
+
+    long explosionTime;
 
     public Phase() {
         setFocusable(true);
         setDoubleBuffered(true);
 
         inGame = true;
-        background = new ImageIcon("D:\\\\Java\\\\Projects\\\\Galaxy Blitz\\\\src\\\\Media\\\\background.png").getImage();
-        gameover = new ImageIcon("D:\\\\Java\\\\Projects\\\\Galaxy Blitz\\\\src\\\\Media\\\\game_over.png").getImage();
+        showGameOver = false;
+        background = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\background.png").getImage();
+        skull = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kills.png").getImage();
+        gameoverPlayAgain = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over1.png").getImage();
+        gameoverExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over2.png").getImage();
+        explosion = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kbum.png").getImage();
         player = new Player();
         player.load();
 
@@ -38,57 +49,85 @@ public class Phase extends JPanel implements ActionListener {
     }
 
     public void enemyInit(){
-        int[] enemysQuant = new int[100];
-        enemy1 = new ArrayList<Enemy1>();
+        int[] enemysQuant = new int[200];
+        enemy1 = new ArrayList<>();
 
         for (int i : enemysQuant) {
             int x = (int)(Math.random() * 8500 + 1280);
-            int y = (int)(Math.random() * 680 + 100);
+            int y = (int)(Math.random() * (720 - 100));
             enemy1.add(new Enemy1(x, y));
         }
     }
 
     @Override
     public void paint(Graphics g) {
-        if (inGame){
-            g.drawImage(background, x1, 0, this);
-            g.drawImage(background, x2, 0, this);
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
 
+        int currentWidth = getWidth();
+        int currentHeight = getHeight();
+
+        double scaleX = (double) currentWidth / 1280;
+        double scaleY = (double) currentHeight / 720;
+        double scale = Math.min(scaleX, scaleY);
+
+        g2d.scale(scale, scale);
+
+        g.drawImage(background, x1, 0, this);
+        g.drawImage(background, x2, 0, this);
+        g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
+
+        if (inGame) {
             g.drawImage(player.getBoostIcon(), player.getX() - 55, player.getY() - 25, this);
-            g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
 
-            g.drawImage(player.getGasIcon(), 10, 10, this);
-            g.drawImage(player.getLifeIcon(), 170, 18, this);
-
-            player.update();
             List<Shot> shots = player.getShots();
             for (Shot s : shots) {
                 s.load();
                 g.drawImage(s.getShotIcon(), s.getX(), s.getY(), this);
             }
 
-            for (int k = 0; k < enemy1.size(); k++){
-                Enemy1 enemy = enemy1.get(k);
-                enemy.load();
-                g.drawImage(enemy.getEnemyIcon(), enemy.getX(), enemy.getY(), this);
+            displayEnemys(g);
+            displayData(g);
+        } else {
+            displayEnemys(g);
+            g.drawImage(explosion, player.getX(), player.getY(), this);
+            displayData(g);
+        }
+
+        if (showGameOver) {
+            if (selectedOption == 0) {
+                g.drawImage(gameoverPlayAgain, 0, 0, null);
+            } else {
+                g.drawImage(gameoverExit, 0, 0, null);
             }
         }
-        else {
-            g.drawImage(background, x1, 0, this);
-            g.drawImage(background, x2, 0, this);
-            g.drawImage(gameover, 0, 0, null);
+    }
+
+    public void displayEnemys(Graphics g) {
+        for (Enemy1 enemy : enemy1) {
+            enemy.load();
+            g.drawImage(enemy.getEnemyIcon(), enemy.getX(), enemy.getY(), this);
         }
+    }
+
+    public void displayData(Graphics g){
+        g.drawImage(player.getGasIcon(), 10, 10, this);
+        g.drawImage(player.getLifeIcon(), 170, 18, this);
+        g.drawImage(skull, 1100, 10, this);
+        killsCount(kills, g);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int speed;
-        if (player.getBoostAtivo()){
-            speed = 12;
+        if (!inGame) {
+            if (System.currentTimeMillis() - explosionTime >= 2000) {
+                showGameOver = true;
+            }
+            repaint();
+            return;
         }
-        else {
-            speed = 5;
-        }
+
+        int speed = player.getBoostAtivo() ? 12 : 5;
 
         x1 -= speed;
         x2 -= speed;
@@ -102,23 +141,21 @@ public class Phase extends JPanel implements ActionListener {
 
         player.update();
         List<Shot> shots = player.getShots();
-        for (int i =0; i < shots.size(); i++){
+        for (int i = 0; i < shots.size(); i++) {
             Shot s = shots.get(i);
-            if (s.isVisible()){
+            if (s.isVisible()) {
                 s.update();
-            }
-            else {
-                shots.remove(i);
+            } else {
+                shots.remove(i--);
             }
         }
 
-        for (int k = 0; k < enemy1.size(); k++){
+        for (int k = 0; k < enemy1.size(); k++) {
             Enemy1 enemy = enemy1.get(k);
-            if (enemy.isVisible()){
+            if (enemy.isVisible()) {
                 enemy.update();
-            }
-            else {
-                enemy1.remove(k);
+            } else {
+                enemy1.remove(k--);
             }
         }
 
@@ -128,45 +165,91 @@ public class Phase extends JPanel implements ActionListener {
 
     public void colideCheck(){
         Rectangle naveShape = player.getBounds();
-        Rectangle Enemy1Shape;
-        Rectangle shotShape;
 
         for (int i = 0; i < enemy1.size(); i++){
             Enemy1 tempEnemy1 = enemy1.get(i);
-            Enemy1Shape = tempEnemy1.getBounds();
+            Rectangle enemy1Shape = tempEnemy1.getBounds();
 
-            if (naveShape.intersects(Enemy1Shape)){
+            if (naveShape.intersects(enemy1Shape)){
                 player.lostLife();
                 if (player.getLife() == 0){
+                    for (Enemy1 e : enemy1){
+                        e.setVelocidade(0);
+                    }
+                    player.setVelocidade(0);
+                    explosionTime = System.currentTimeMillis();
                     inGame = false;
                 }
             }
         }
 
         List<Shot> shots = player.getShots();
-        for (int j = 0; j < shots.size(); j++) {
-            Shot tempShot = shots.get(j);
-            shotShape = tempShot.getBounds();
+        for (Shot tempShot : shots) {
+            Rectangle shotShape = tempShot.getBounds();
 
-            for (int k = 0; k < enemy1.size(); k++) {
-                Enemy1 tempEnemy1 = enemy1.get(k);
+            for (Enemy1 tempEnemy1 : enemy1) {
                 Rectangle enemy1Shape = tempEnemy1.getBounds();
 
                 if (shotShape.intersects(enemy1Shape)) {
                     tempEnemy1.setVisible(false);
                     tempShot.setVisible(false);
+
+                    kills += 1;
                 }
             }
         }
     }
 
-    private class TecladoAdapter extends KeyAdapter{
-        public void keyPressed(KeyEvent tecla){
-            player.keyPressed(tecla);
+    public void killsCount(Integer kills, Graphics g){
+        int nextNumberPosition = 1155;
+
+        String ks = kills.toString();
+        for (int i = 0; i < ks.length(); i++){
+            String pathN = "D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\numbers\\n" + (ks.charAt(i)) + ".png";
+            Image n = new ImageIcon(pathN).getImage();
+
+            g.drawImage(n, nextNumberPosition,17, this);
+            if(ks.length() > 1){
+                nextNumberPosition += 30;
+            }
+        }
+        kills += 1;
+    }
+
+    private class TecladoAdapter extends KeyAdapter {
+        public void keyPressed(KeyEvent tecla) {
+            if (showGameOver) {
+                if (tecla.getKeyCode() == KeyEvent.VK_LEFT || tecla.getKeyCode() == KeyEvent.VK_A) {
+                    selectedOption = 0;
+                } else if (tecla.getKeyCode() == KeyEvent.VK_RIGHT || tecla.getKeyCode() == KeyEvent.VK_D) {
+                    selectedOption = 1;
+                } else if (tecla.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (selectedOption == 0) {
+                        inGame = true;
+                        showGameOver = false;
+                        x1 = 0;
+                        x2 = background.getWidth(null);
+
+                        kills = 0;
+                        player.reset();
+                        player.getShots().clear();
+                        enemy1.clear();
+                        enemyInit();
+
+                        repaint();
+                    } else {
+                        System.exit(0);
+                    }
+                }
+            } else {
+                player.keyPressed(tecla);
+            }
         }
 
-        public void keyReleased(KeyEvent tecla){
-            player.keyReleased(tecla);
+        public void keyReleased(KeyEvent tecla) {
+            if (!showGameOver) {
+                player.keyReleased(tecla);
+            }
         }
     }
 }

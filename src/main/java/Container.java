@@ -4,11 +4,11 @@ import javax.swing.JFrame;
 public class Container extends JFrame {
     public Container(){
         add(new Phase());
-        setTitle("Meu jogo");
+        setTitle("Galaxy Blitz");
         setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        this.setResizable(false); //mudar para possível depois
+        this.setResizable(true);
         setVisible(true);
     }
 
