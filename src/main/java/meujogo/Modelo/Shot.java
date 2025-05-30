@@ -9,7 +9,7 @@ public class Shot {
     private int largura, altura;
     private boolean isVisible;
 
-    private static final int LARGURA = 1220;
+    private static final int LARGURA = 1280;
     private static int VELOCIDADE = 20;
 
      public Shot(int x, int y){

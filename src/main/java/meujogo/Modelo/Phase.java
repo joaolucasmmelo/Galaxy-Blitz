@@ -12,27 +12,30 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Phase extends JPanel implements ActionListener {
-    private final Image background, skull, gameoverPlayAgain, gameoverExit, explosion;
+    private final Image background, skull, gameoverPlayAgain, gameoverExit, gameStartPlay, gameStartExit, explosion;
     private int x1, x2;
     private final Player player;
     private List<Enemy1> enemy1;
     private boolean inGame;
     private boolean showGameOver;
+    private boolean starting = true;
     private int selectedOption = 0;
     Integer kills = 0;
-
     long explosionTime;
+
+    SoundPlayer explosionSound = new SoundPlayer();
 
     public Phase() {
         setFocusable(true);
         setDoubleBuffered(true);
 
-        inGame = true;
         showGameOver = false;
         background = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\background.png").getImage();
         skull = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kills.png").getImage();
         gameoverPlayAgain = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over1.png").getImage();
         gameoverExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over2.png").getImage();
+        gameStartPlay = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title1.png").getImage();
+        gameStartExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title2.png").getImage();
         explosion = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kbum.png").getImage();
         player = new Player();
         player.load();
@@ -62,43 +65,43 @@ public class Phase extends JPanel implements ActionListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
-
-        int currentWidth = getWidth();
-        int currentHeight = getHeight();
-
-        double scaleX = (double) currentWidth / 1280;
-        double scaleY = (double) currentHeight / 720;
-        double scale = Math.min(scaleX, scaleY);
-
-        g2d.scale(scale, scale);
 
         g.drawImage(background, x1, 0, this);
         g.drawImage(background, x2, 0, this);
-        g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
 
-        if (inGame) {
-            g.drawImage(player.getBoostIcon(), player.getX() - 55, player.getY() - 25, this);
+        if (starting){
+            if (selectedOption == 0) {
+                g.drawImage(gameStartPlay, 0, 0, null);
+            } else {
+                g.drawImage(gameStartExit, 0, 0, null);
+            }
+        }
+        else {
+            if (inGame) {
+                g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
+                g.drawImage(player.getBoostIcon(), player.getX() - 55, player.getY(), this);
 
-            List<Shot> shots = player.getShots();
-            for (Shot s : shots) {
-                s.load();
-                g.drawImage(s.getShotIcon(), s.getX(), s.getY(), this);
+                List<Shot> shots = player.getShots();
+                for (Shot s : shots) {
+                    s.load();
+                    g.drawImage(s.getShotIcon(), s.getX(), s.getY(), this);
+                }
+
+                displayEnemys(g);
+                displayStats(g);
+            }
+            else {
+                displayEnemys(g);
+                g.drawImage(explosion, player.getX(), player.getY(), this);
+                displayStats(g);
             }
 
-            displayEnemys(g);
-            displayData(g);
-        } else {
-            displayEnemys(g);
-            g.drawImage(explosion, player.getX(), player.getY(), this);
-            displayData(g);
-        }
-
-        if (showGameOver) {
-            if (selectedOption == 0) {
-                g.drawImage(gameoverPlayAgain, 0, 0, null);
-            } else {
-                g.drawImage(gameoverExit, 0, 0, null);
+            if (showGameOver && !starting) {
+                if (selectedOption == 0) {
+                    g.drawImage(gameoverPlayAgain, 0, 0, null);
+                } else {
+                    g.drawImage(gameoverExit, 0, 0, null);
+                }
             }
         }
     }
@@ -110,7 +113,7 @@ public class Phase extends JPanel implements ActionListener {
         }
     }
 
-    public void displayData(Graphics g){
+    public void displayStats(Graphics g){
         g.drawImage(player.getGasIcon(), 10, 10, this);
         g.drawImage(player.getLifeIcon(), 170, 18, this);
         g.drawImage(skull, 1100, 10, this);
@@ -172,12 +175,14 @@ public class Phase extends JPanel implements ActionListener {
 
             if (naveShape.intersects(enemy1Shape)){
                 player.lostLife();
+                player.checkLife();
                 if (player.getLife() == 0){
                     for (Enemy1 e : enemy1){
                         e.setVelocidade(0);
                     }
                     player.setVelocidade(0);
                     explosionTime = System.currentTimeMillis();
+                    explosionSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\explosion_sound.WAV");
                     inGame = false;
                 }
             }
@@ -213,7 +218,6 @@ public class Phase extends JPanel implements ActionListener {
                 nextNumberPosition += 30;
             }
         }
-        kills += 1;
     }
 
     private class TecladoAdapter extends KeyAdapter {
@@ -227,6 +231,7 @@ public class Phase extends JPanel implements ActionListener {
                     if (selectedOption == 0) {
                         inGame = true;
                         showGameOver = false;
+                        starting = false;
                         x1 = 0;
                         x2 = background.getWidth(null);
 

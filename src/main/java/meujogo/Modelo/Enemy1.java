@@ -23,7 +23,7 @@ public class Enemy1 {
      }
 
      public void load() {
-         shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy22.png").getImage();
+         shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy1.png").getImage();
 
          this.largura = shotIcon.getWidth(null);
          this.altura = shotIcon.getHeight(null);

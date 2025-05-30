@@ -17,6 +17,9 @@ public class Player {
     private List<Shot> shots;
     private boolean shotCountVer = false;
 
+    SoundPlayer damageSound = new SoundPlayer();
+    SoundPlayer boostSound = new SoundPlayer();
+
     private Image gasIcon;
     private List<BoostInfo> boostsAtivos = new ArrayList<>();
 
@@ -60,7 +63,8 @@ public class Player {
         if (x < 0) x = 0;
         if (x > 1240) x = 1240;
         if (y < 0) y = 0;
-        if (y > 720 - playerIcon.getHeight(null)) y = 720 - playerIcon.getHeight(null);
+        if (y > 680 - playerIcon.getHeight(null)) y = 680 - playerIcon.getHeight(null);
+        if (x > 1270 - playerIcon.getWidth(null)) x = 1270 - playerIcon.getWidth(null);
 
         checkGasStatus();
         checkLife();
@@ -71,6 +75,7 @@ public class Player {
             boostAtivo = true;
             gas--;
             boostsAtivos.add(new BoostInfo(now));
+            boostSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\boost_sound.WAV");
         }
 
         List<BoostInfo> boostsParaRemover = new ArrayList<>();
@@ -104,6 +109,10 @@ public class Player {
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
         }
         if (!verLife){
+            if (verDamageSound){
+                damageSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\damage.WAV");
+                verDamageSound = false;
+            }
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_damage.png").getImage();
         }
     }
@@ -186,6 +195,7 @@ public class Player {
     }
 
     boolean verLife = true;
+    boolean verDamageSound = false;
     private long lastLifeLossTime = 0;
 
     public void lostLife() {
@@ -194,6 +204,7 @@ public class Player {
         if (verLife && life > 0) {
             this.life -= 1;
             verLife = false;
+            verDamageSound = true;
             lastLifeLossTime = now;
         }
     }
