@@ -50,7 +50,7 @@ public class Phase extends JPanel implements ActionListener {
     }
 
     public void enemyInit(){
-        int[] enemysQuant = new int[200];
+        int[] enemysQuant = new int[100];
         enemy1 = new ArrayList<>();
 
         for (int i : enemysQuant) {
@@ -172,16 +172,22 @@ public class Phase extends JPanel implements ActionListener {
             Rectangle enemy1Shape = tempEnemy1.getBounds();
 
             if (naveShape.intersects(enemy1Shape)){
-                player.lostLife();
-                player.checkLife();
-                if (player.getLife() == 0){
-                    for (Enemy1 e : enemy1){
-                        e.setVelocidade(0);
+                if (player.getBoostAtivo()){
+                    tempEnemy1.setVisible(false);
+                    kills += 1;
+                }
+                else {
+                    player.lostLife();
+                    player.checkLife();
+                    if (player.getLife() == 0){
+                        for (Enemy1 e : enemy1){
+                            e.setVelocidade(0);
+                        }
+                        player.setVelocidade(0);
+                        explosionTime = System.currentTimeMillis();
+                        explosionSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\explosion_sound.WAV");
+                        inGame = false;
                     }
-                    player.setVelocidade(0);
-                    explosionTime = System.currentTimeMillis();
-                    explosionSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\explosion_sound.WAV");
-                    inGame = false;
                 }
             }
         }

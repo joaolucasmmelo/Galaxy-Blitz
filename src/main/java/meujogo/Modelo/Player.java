@@ -112,7 +112,9 @@ public class Player {
     }
 
     public void simpleShot(){
-        this.shots.add(new Shot(x+largura, y + (altura/2)));
+        if (!boostAtivo){
+            this.shots.add(new Shot(x+largura, y + (altura/2)));
+        }
     }
 
     public void keyPressed(KeyEvent tecla) {
