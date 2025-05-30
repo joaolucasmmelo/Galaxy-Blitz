@@ -1,5 +1,3 @@
-// Phase.java
-
 package meujogo.Modelo;
 
 import java.util.ArrayList;
@@ -198,7 +196,6 @@ public class Phase extends JPanel implements ActionListener {
                 if (shotShape.intersects(enemy1Shape)) {
                     tempEnemy1.setVisible(false);
                     tempShot.setVisible(false);
-
                     kills += 1;
                 }
             }
@@ -207,8 +204,8 @@ public class Phase extends JPanel implements ActionListener {
 
     public void killsCount(Integer kills, Graphics g){
         int nextNumberPosition = 1155;
-
         String ks = kills.toString();
+
         for (int i = 0; i < ks.length(); i++){
             String pathN = "D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\numbers\\n" + (ks.charAt(i)) + ".png";
             Image n = new ImageIcon(pathN).getImage();
@@ -234,7 +231,6 @@ public class Phase extends JPanel implements ActionListener {
                         starting = false;
                         x1 = 0;
                         x2 = background.getWidth(null);
-
                         kills = 0;
                         player.reset();
                         player.getShots().clear();

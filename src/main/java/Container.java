@@ -1,6 +1,5 @@
 import meujogo.Modelo.Phase;
 import meujogo.Modelo.SoundPlayer;
-
 import javax.swing.JFrame;
 
 public class Container extends JFrame {

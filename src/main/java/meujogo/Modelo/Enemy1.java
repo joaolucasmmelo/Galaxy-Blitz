@@ -13,7 +13,7 @@ public class Enemy1 {
     private int velocidade = 4;
 
      public Enemy1(int x, int y){
-         this.x = x-20;
+         this.x = x;
          this.y = y;
          isVisible = true;
      }

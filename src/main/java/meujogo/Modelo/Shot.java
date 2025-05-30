@@ -13,7 +13,7 @@ public class Shot {
     private static int VELOCIDADE = 20;
 
      public Shot(int x, int y){
-         this.x = x-85;
+         this.x = x-55;
          this.y = y;
          isVisible = true;
      }

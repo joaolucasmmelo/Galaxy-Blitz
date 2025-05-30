@@ -22,7 +22,6 @@ public class Player {
 
     private Image gasIcon;
     private List<BoostInfo> boostsAtivos = new ArrayList<>();
-
     private boolean boostAtivo = false;
     private int gas = 3;
 
@@ -39,7 +38,6 @@ public class Player {
     public Player() {
         this.x = 100;
         this.y = 100;
-
         shots = new ArrayList<Shot>();
     }
 
@@ -49,7 +47,6 @@ public class Player {
 
     public void load() {
         playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
-
         altura = playerIcon.getHeight(null);
         largura = playerIcon.getWidth(null);
     }
@@ -59,7 +56,6 @@ public class Player {
         if (down) y += velocidade;
         if (left) x -= velocidade;
         if (right) x += velocidade;
-
         if (x < 0) x = 0;
         if (x > 1240) x = 1240;
         if (y < 0) y = 0;
@@ -70,7 +66,6 @@ public class Player {
         checkLife();
 
         long now = System.currentTimeMillis();
-
         if (shift && !boostAtivo && gas > 0) {
             boostAtivo = true;
             gas--;
@@ -79,7 +74,6 @@ public class Player {
         }
 
         List<BoostInfo> boostsParaRemover = new ArrayList<>();
-
         for (BoostInfo b : boostsAtivos) {
             if (!b.ended && now - b.startTime >= 3000) {
                 boostAtivo = false;
@@ -97,8 +91,8 @@ public class Player {
             velocidade = 6;
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_blur.png").getImage();
             boostIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\fire.png").getImage();
-
-        } else {
+        }
+        else {
             velocidade = 3;
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
             boostIcon = null;
@@ -128,11 +122,9 @@ public class Player {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = true;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = true;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = true;
-
         if (code == KeyEvent.VK_SHIFT){
             shift = true;
         }
-
         if (code == KeyEvent.VK_P && !shotCountVer){
             simpleShot();
             shotCountVer = true;
@@ -146,11 +138,9 @@ public class Player {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = false;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = false;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = false;
-
         if (code == KeyEvent.VK_SHIFT){
             shift = false;
         }
-
         if (code == KeyEvent.VK_P) shotCountVer = false;
     }
 
@@ -200,7 +190,6 @@ public class Player {
 
     public void lostLife() {
         long now = System.currentTimeMillis();
-
         if (verLife && life > 0) {
             this.life -= 1;
             verLife = false;
