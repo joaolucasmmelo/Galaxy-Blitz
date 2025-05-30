@@ -200,9 +200,15 @@ public class Phase extends JPanel implements ActionListener {
                 Rectangle enemy1Shape = tempEnemy1.getBounds();
 
                 if (shotShape.intersects(enemy1Shape)) {
-                    tempEnemy1.setVisible(false);
-                    tempShot.setVisible(false);
-                    kills += 1;
+                    if (tempEnemy1.getLife() == 2){
+                        tempShot.setVisible(false);
+                        tempEnemy1.setLife(1);
+                    }
+                    else{
+                        tempEnemy1.setVisible(false);
+                        tempShot.setVisible(false);
+                        kills += 1;
+                    }
                 }
             }
         }

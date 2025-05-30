@@ -19,6 +19,7 @@ public class Player {
 
     SoundPlayer damageSound = new SoundPlayer();
     SoundPlayer boostSound = new SoundPlayer();
+    SoundPlayer shotSound = new SoundPlayer();
 
     private Image gasIcon;
     private List<BoostInfo> boostsAtivos = new ArrayList<>();
@@ -88,12 +89,12 @@ public class Player {
         boostsAtivos.removeAll(boostsParaRemover);
 
         if (boostAtivo) {
-            velocidade = 6;
+            velocidade = 8;
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_blur.png").getImage();
             boostIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\fire.png").getImage();
         }
         else {
-            velocidade = 3;
+            velocidade = 4;
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
             boostIcon = null;
         }
@@ -130,6 +131,7 @@ public class Player {
         if (code == KeyEvent.VK_P && !shotCountVer){
             simpleShot();
             shotCountVer = true;
+            shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\shot_sound.WAV");
         }
     }
 
