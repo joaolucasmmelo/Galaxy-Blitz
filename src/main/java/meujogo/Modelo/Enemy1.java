@@ -12,6 +12,7 @@ public class Enemy1 {
     private int largura, altura;
     private boolean isVisible;
     private int velocidade = 3;
+
     private Image enemy1ShotIcon;
     private List<Shot> enemy1Shots;
     private long lastShotTime = System.currentTimeMillis();
@@ -38,8 +39,6 @@ public class Enemy1 {
 
         enemy1ShotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\shot.png").getImage();
 
-        this.largura = enemy1ShotIcon.getWidth(null);
-        this.altura = enemy1Icon.getHeight(null);
         this.largura = enemy1Icon.getWidth(null);
         this.altura = enemy1Icon.getHeight(null);
     }
@@ -48,7 +47,7 @@ public class Enemy1 {
         this.x -= velocidade;
         if (x >= 0 && x <= 1280) {
             long currentTime = System.currentTimeMillis();
-            if (currentTime - lastShotTime >= 2000) { // 2 segundos
+            if (currentTime - lastShotTime >= 2000) {
                 simpleShot();
                 lastShotTime = currentTime;
             }
@@ -65,10 +64,6 @@ public class Enemy1 {
 
     public void setVisible(boolean isVisible) {
         this.isVisible = isVisible;
-    }
-
-    public int getVelocidade() {
-        return velocidade;
     }
 
     public void setVelocidade(int velocidade) {
@@ -89,10 +84,6 @@ public class Enemy1 {
 
     public int getY() {
         return y;
-    }
-
-    public List<Shot> getEnemyShots() {
-        return enemy1Shots;
     }
 
     public Image getEnemyIcon() {

@@ -14,6 +14,7 @@ public class Phase extends JPanel implements ActionListener {
     private int x1, x2;
     private final Player player;
     private List<Enemy1> enemy1;
+    private List<Heart> hearts;
     private boolean inGame;
     private boolean showGameOver;
     private boolean starting = true;
@@ -22,6 +23,7 @@ public class Phase extends JPanel implements ActionListener {
     long explosionTime;
 
     SoundPlayer explosionSound = new SoundPlayer();
+    SoundPlayer enemyDieSound = new SoundPlayer();
 
     public Phase() {
         setFocusable(true);
@@ -47,17 +49,7 @@ public class Phase extends JPanel implements ActionListener {
         timer.start();
 
         enemyInit();
-    }
-
-    public void enemyInit(){
-        int[] enemysQuant = new int[100];
-        enemy1 = new ArrayList<>();
-
-        for (int i : enemysQuant) {
-            int x = (int)(Math.random() * 8500 + 1280);
-            int y = (int)(Math.random() * (720 - 100));
-            enemy1.add(new Enemy1(x, y));
-        }
+        heartInit();
     }
 
     @Override
@@ -79,17 +71,27 @@ public class Phase extends JPanel implements ActionListener {
                 g.drawImage(player.getPlayerIcon(), player.getX(), player.getY(), this);
                 g.drawImage(player.getBoostIcon(), player.getX() - 55, player.getY(), this);
 
+                displayEnemies(g);
+
                 List<Shot> shots = player.getShots();
                 for (Shot s : shots) {
                     s.load();
                     g.drawImage(s.getShotIcon(), s.getX(), s.getY(), this);
                 }
 
-                displayEnemys(g);
+                if (player.isDuringSpecial()){
+                    List<SpecialShot> specialShots = player.getSpecialShots();
+                    for (SpecialShot ss : specialShots) {
+                        g.drawImage(ss.getPowerShotIcon(), player.getX() + 62, player.getY() + 20, this);
+                    }
+                }
+
+                displayHearts(g);
                 displayStats(g);
             }
             else {
-                displayEnemys(g);
+                displayEnemies(g);
+                displayHearts(g);
                 g.drawImage(explosion, player.getX(), player.getY(), this);
                 displayStats(g);
             }
@@ -104,16 +106,57 @@ public class Phase extends JPanel implements ActionListener {
         }
     }
 
-    public void displayEnemys(Graphics g) {
+    public void enemyInit() {
+        int enemyInitial = 1300;
+        int totalEnemies = 120;
+        int groups = 3;
+        int enemiesPerGroup = totalEnemies / groups;
+        int groupSpacing = 2500;
+        int innerSpacing = groupSpacing / enemiesPerGroup;
+        enemy1 = new ArrayList<>();
+
+        for (int i = 0; i < groups; i++) {
+            int baseX = enemyInitial + i * groupSpacing;
+            for (int j = 0; j < enemiesPerGroup; j++) {
+                int x = baseX + j * innerSpacing + (int)(Math.random() * 200 - 100);
+                int y = (int)(Math.random() * (720 - 100));
+                enemy1.add(new Enemy1(x, y));
+            }
+        }
+    }
+
+    public void heartInit() {
+        hearts = new ArrayList<>();
+        int groups = 3;
+        int groupSpacing = 2500;
+        int enemyInitial = 1300;
+
+        for (int i = 1; i <= groups; i++) {
+            int x = enemyInitial + i * groupSpacing - 200;
+            x += (int)(Math.random() * 200 - 100);
+            int y = (int)(Math.random() * (720 - 100));
+            hearts.add(new Heart(x, y));
+        }
+    }
+
+    public void displayEnemies(Graphics g) {
         for (Enemy1 enemy : enemy1) {
             enemy.load();
             g.drawImage(enemy.getEnemyIcon(), enemy.getX(), enemy.getY(), this);
         }
     }
 
+    public void displayHearts(Graphics g) {
+        for (Heart heart : hearts) {
+            heart.load();
+            g.drawImage(heart.getHeartIcon(), heart.getX(), heart.getY(), this);
+        }
+    }
+
     public void displayStats(Graphics g){
         g.drawImage(player.getGasIcon(), 10, 10, this);
         g.drawImage(player.getLifeIcon(), 170, 18, this);
+        g.drawImage(player.getSpecialBarIcon(),5, 610, this);
         g.drawImage(skull, 1100, 10, this);
         killsCount(kills, g);
     }
@@ -160,6 +203,20 @@ public class Phase extends JPanel implements ActionListener {
             }
         }
 
+        for (int j = 0; j < hearts.size(); j++) {
+            Heart heart = hearts.get(j);
+            if (heart.isVisible()) {
+                heart.update();
+            } else {
+                hearts.remove(j--);
+            }
+        }
+
+        List<SpecialShot> specialShots = player.getSpecialShots();
+        for (SpecialShot ss : specialShots) {
+            ss.update();
+        }
+
         colideCheck();
         repaint();
     }
@@ -174,7 +231,9 @@ public class Phase extends JPanel implements ActionListener {
             if (naveShape.intersects(enemy1Shape)){
                 if (player.getBoostAtivo()){
                     tempEnemy1.setVisible(false);
+                    enemyDieSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\enemyDie_sound.WAV");
                     kills += 1;
+                    player.setKillsVer();
                 }
                 else {
                     player.lostLife();
@@ -207,9 +266,40 @@ public class Phase extends JPanel implements ActionListener {
                     else{
                         tempEnemy1.setVisible(false);
                         tempShot.setVisible(false);
+                        enemyDieSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\enemyDie_sound.WAV");
                         kills += 1;
+                        player.setKillsVer();
                     }
                 }
+            }
+        }
+
+        if (player.isDuringSpecial()) {
+            List<SpecialShot> specialShots = player.getSpecialShots();
+            for (SpecialShot tempSpecialShot : specialShots) {
+                Rectangle specialShotShape = tempSpecialShot.getBounds();
+
+                for (Enemy1 tempEnemy1 : enemy1) {
+                    Rectangle enemy1Shape = tempEnemy1.getBounds();
+
+                    if (specialShotShape.intersects(enemy1Shape)) {
+                        if (tempEnemy1.getLife() == 2) {
+                            tempEnemy1.setLife(1);
+                        } else {
+                            tempEnemy1.setVisible(false);
+                            kills += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Heart tempHeart : hearts) {
+            Rectangle heartShape = tempHeart.getBounds();
+
+            if (naveShape.intersects(heartShape) && (player.getLife() < 3)) {
+                player.gainLife();
+                tempHeart.setVisible(false);
             }
         }
     }
@@ -246,7 +336,10 @@ public class Phase extends JPanel implements ActionListener {
                         kills = 0;
                         player.reset();
                         player.getShots().clear();
+                        player.getSpecialShots().clear();
                         enemy1.clear();
+                        hearts.clear();
+                        heartInit();
                         enemyInit();
 
                         repaint();

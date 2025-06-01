@@ -14,19 +14,30 @@ public class Player {
     private Image playerIcon;
     private Image boostIcon;
     private Image lifeIcon;
-    private List<Shot> shots;
+    private Image specialBarIcon;
+    private final List<Shot> shots;
+    private final List<SpecialShot> specialShots;
     private boolean shotCountVer = false;
+    private boolean specialReady = false;
+    private boolean duringSpecial = false;
+    private int killsVer;
+    private long specialStartTime;
 
     SoundPlayer damageSound = new SoundPlayer();
+    SoundPlayer heartSound = new SoundPlayer();
     SoundPlayer boostSound = new SoundPlayer();
     SoundPlayer shotSound = new SoundPlayer();
 
     private Image gasIcon;
-    private List<BoostInfo> boostsAtivos = new ArrayList<>();
+    private final List<BoostInfo> boostsAtivos = new ArrayList<>();
     private boolean boostAtivo = false;
     private int gas = 3;
 
-    private class BoostInfo {
+    public List<SpecialShot> getSpecialShots() {
+        return specialShots;
+    }
+
+    private static class BoostInfo {
         long startTime;
         boolean ended;
 
@@ -39,7 +50,8 @@ public class Player {
     public Player() {
         this.x = 100;
         this.y = 100;
-        shots = new ArrayList<Shot>();
+        shots = new ArrayList<>();
+        specialShots = new ArrayList<>();
     }
 
     public Rectangle getBounds(){
@@ -63,6 +75,7 @@ public class Player {
         if (y > 680 - playerIcon.getHeight(null)) y = 680 - playerIcon.getHeight(null);
         if (x > 1270 - playerIcon.getWidth(null)) x = 1270 - playerIcon.getWidth(null);
 
+        checkSpecialStatus();
         checkGasStatus();
         checkLife();
 
@@ -105,16 +118,32 @@ public class Player {
         }
         if (!verLife){
             if (verDamageSound){
-                damageSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\damage.WAV");
+                damageSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\damage_sound.WAV");
                 verDamageSound = false;
             }
             playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_damage.png").getImage();
+        }
+
+        if (duringSpecial){
+            velocidade = 2;
+            if ((now - specialStartTime) > 5000){
+                duringSpecial = false;
+                killsVer = 0;
+            }
         }
     }
 
     public void simpleShot(){
         if (!boostAtivo){
             this.shots.add(new Shot(x+largura, y + (altura/2)));
+            shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\shot_sound.WAV");
+        }
+    }
+
+    public void specialShot() {
+        if (!boostAtivo){
+            this.specialShots.add(new SpecialShot(this));
+            shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\powerShot_sound.WAV");
         }
     }
 
@@ -125,13 +154,19 @@ public class Player {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = true;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = true;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = true;
-        if (code == KeyEvent.VK_SHIFT){
+        if (code == KeyEvent.VK_SHIFT && !duringSpecial){
             shift = true;
         }
-        if (code == KeyEvent.VK_P && !shotCountVer){
+        if (code == KeyEvent.VK_P && !shotCountVer && !duringSpecial){
             simpleShot();
             shotCountVer = true;
-            shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\shot_sound.WAV");
+        }
+        if (code == KeyEvent.VK_SPACE && specialReady && !boostAtivo){
+            specialShot();
+            duringSpecial = true;
+            specialStartTime = System.currentTimeMillis();
+            killsVer = 0;
+            specialReady = false;
         }
     }
 
@@ -178,14 +213,41 @@ public class Player {
         }
     }
 
+    public void checkSpecialStatus(){
+        if (0 <= killsVer && killsVer < 8){
+            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar0.png").getImage();
+        }
+        if (8 <= killsVer && killsVer < 16){
+            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar1.png").getImage();
+        }
+        if (16 <= killsVer && killsVer < 24){
+            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar2.png").getImage();
+        }
+        if (24 <= killsVer && killsVer < 32){
+            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar3.png").getImage();
+        }
+        if (32 <= killsVer && killsVer < 40){
+            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar4.png").getImage();
+        }
+        if (5 <= killsVer){
+            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar5.png").getImage();
+            if (!specialReady){
+                shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\ready_sound.wav");
+            }
+            specialReady = true;
+        }
+    }
+
     public void reset() {
         this.x = 100;
         this.y = 100;
         this.velocidade = 3;
         this.gas = 3;
         this.life = 3;
+        this.killsVer = 0;
         this.boostAtivo = false;
         this.shots.clear();
+        this.specialShots.clear();
     }
 
     boolean verLife = true;
@@ -204,6 +266,7 @@ public class Player {
 
     public void gainLife(){
         this.life += 1;
+        heartSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\heart_sound.WAV");
     }
 
     public int getLife() {
@@ -211,6 +274,10 @@ public class Player {
     }
     public boolean getBoostAtivo() {
         return boostAtivo;
+    }
+
+    public boolean isDuringSpecial() {
+        return duringSpecial;
     }
 
     public int getX() {
@@ -225,6 +292,10 @@ public class Player {
         this.velocidade = velocidade;
     }
 
+    public void setKillsVer() {
+        this.killsVer = killsVer + 1;
+    }
+
     public Image getPlayerIcon() {
         return playerIcon;
     }
@@ -235,6 +306,10 @@ public class Player {
 
     public Image getGasIcon() {
         return gasIcon;
+    }
+
+    public Image getSpecialBarIcon() {
+        return specialBarIcon;
     }
 
     public Image getLifeIcon() {
