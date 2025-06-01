@@ -229,7 +229,7 @@ public class Player {
         if (32 <= killsVer && killsVer < 40){
             specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar4.png").getImage();
         }
-        if (5 <= killsVer){
+        if (40 <= killsVer){
             specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar5.png").getImage();
             if (!specialReady){
                 shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\ready_sound.wav");
