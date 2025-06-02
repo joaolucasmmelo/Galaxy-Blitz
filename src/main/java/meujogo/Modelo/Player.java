@@ -245,6 +245,8 @@ public class Player {
         this.gas = 3;
         this.life = 3;
         this.killsVer = 0;
+        this.specialReady = false;
+        this.duringSpecial = false;
         this.boostAtivo = false;
         this.shots.clear();
         this.specialShots.clear();
