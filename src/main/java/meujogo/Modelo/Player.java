@@ -250,6 +250,10 @@ public class Player {
         this.boostAtivo = false;
         this.shots.clear();
         this.specialShots.clear();
+        this.up = false;
+        this.left = false;
+        this.right = false;
+        this.down = false;
     }
 
     boolean verLife = true;

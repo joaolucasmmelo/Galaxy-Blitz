@@ -37,7 +37,7 @@ public class Enemy1 {
             enemy1Icon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy11.png").getImage();
         }
 
-        enemy1ShotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\shot.png").getImage();
+        enemy1ShotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy_shot.png").getImage();
 
         this.largura = enemy1Icon.getWidth(null);
         this.altura = enemy1Icon.getHeight(null);
@@ -45,6 +45,11 @@ public class Enemy1 {
 
     public void update() {
         this.x -= velocidade;
+        if (this.x < -85){
+            this.isVisible = false;
+        }
+
+        //tiros inimigos para depois
         if (x >= 0 && x <= 1280) {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastShotTime >= 2000) {

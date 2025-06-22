@@ -10,12 +10,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Phase extends JPanel implements ActionListener {
-    private final Image background, skull, gameoverPlayAgain, gameoverGuide, gameoverExit, gameStartPlay, gameStartExit, gameStartGuide, guideScreen, explosion;
+    private final Image background, skull, gameoverPlayAgain, gameoverGuide, gameoverExit, gameWinPlay, gameWinGuide, gameWinExit, gameStartPlay, gameStartExit, gameStartGuide, guideScreen, explosion;
     private int x1, x2;
     private final Player player;
     private List<Enemy1> enemy1;
     private List<Heart> hearts;
     private boolean inGame;
+    private boolean win = false;
     private boolean guide;
     private boolean showGameOver;
     private boolean starting = true;
@@ -25,6 +26,7 @@ public class Phase extends JPanel implements ActionListener {
 
     SoundPlayer explosionSound = new SoundPlayer();
     SoundPlayer enemyDieSound = new SoundPlayer();
+    SoundPlayer winSound = new SoundPlayer();
 
     public Phase() {
         setFocusable(true);
@@ -39,8 +41,12 @@ public class Phase extends JPanel implements ActionListener {
         gameStartPlay = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title1.png").getImage();
         gameStartGuide = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title2.png").getImage();
         gameStartExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title3.png").getImage();
+        gameWinPlay = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\win1.png").getImage();
+        gameWinGuide = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\win2.png").getImage();
+        gameWinExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\win3.png").getImage();
         guideScreen = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\guide_screen.png").getImage();
         explosion = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kbum.png").getImage();
+        winSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\win_sound.WAV");
         player = new Player();
         player.load();
 
@@ -103,22 +109,49 @@ public class Phase extends JPanel implements ActionListener {
             else {
                 displayEnemies(g);
                 displayHearts(g);
-                g.drawImage(explosion, player.getX(), player.getY(), this);
+                if (!win){
+                    g.drawImage(explosion, player.getX(), player.getY(), this);
+                }
                 displayStats(g);
             }
 
-            if (showGameOver && !starting) {
+            if (!starting && !win && !inGame) {
+                player.setVelocidade(0);
+                displayEnemies(g);
+                displayHearts(g);
+                g.drawImage(explosion, player.getX(), player.getY(), this);
+                displayStats(g);
+
+                if (showGameOver) {
+                    if (selectedOption == 0) {
+                        g.drawImage(gameoverPlayAgain, 0, 0, null);
+                    }
+                    if (selectedOption == 1){
+                        g.drawImage(gameoverGuide, 0, 0, null);
+                        if (guide){
+                            g.drawImage(guideScreen, 0, 0, null);
+                        }
+                    }
+                    if (selectedOption == 2){
+                        g.drawImage(gameoverExit, 0, 0, null);
+                    }
+                }
+            }
+
+            if (win && !starting) {
+                inGame = false;
+
                 if (selectedOption == 0) {
-                    g.drawImage(gameoverPlayAgain, 0, 0, null);
+                    g.drawImage(gameWinPlay, 0, 0, null);
                 }
                 if (selectedOption == 1){
-                    g.drawImage(gameoverGuide, 0, 0, null);
+                    g.drawImage(gameWinGuide, 0, 0, null);
                     if (guide){
                         g.drawImage(guideScreen, 0, 0, null);
                     }
                 }
                 if (selectedOption == 2){
-                    g.drawImage(gameoverExit, 0, 0, null);
+                    g.drawImage(gameWinExit, 0, 0, null);
                 }
             }
         }
@@ -181,6 +214,10 @@ public class Phase extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (!inGame && win){
+            repaint();
+            return;
+        }
         if (!inGame) {
             if (System.currentTimeMillis() - explosionTime >= 2000) {
                 showGameOver = true;
@@ -189,7 +226,7 @@ public class Phase extends JPanel implements ActionListener {
             return;
         }
 
-        int speed = player.getBoostAtivo() ? 12 : 5;
+        int speed = player.getBoostAtivo() ? 10 : 5;
 
         x1 -= speed;
         x2 -= speed;
@@ -236,6 +273,7 @@ public class Phase extends JPanel implements ActionListener {
         }
 
         colideCheck();
+        winCheck();
         repaint();
     }
 
@@ -322,6 +360,20 @@ public class Phase extends JPanel implements ActionListener {
         }
     }
 
+    public void winCheck(){
+        if (enemy1.isEmpty()){
+            if (kills >= 120*3/4){
+                win = true;
+            }
+            else {
+                inGame = false;
+                player.setVelocidade(0);
+                explosionTime = System.currentTimeMillis();
+                explosionSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\explosion_sound.WAV");
+            }
+        }
+    }
+
     public void killsCount(Integer kills, Graphics g){
         int nextNumberPosition = 1155;
         String ks = kills.toString();
@@ -339,7 +391,7 @@ public class Phase extends JPanel implements ActionListener {
 
     private class TecladoAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent tecla) {
-            if (showGameOver) {
+            if (showGameOver || (win && !inGame)) {
                 if (tecla.getKeyCode() == KeyEvent.VK_LEFT || tecla.getKeyCode() == KeyEvent.VK_A && !guide) {
                     if (selectedOption > 0){
                         selectedOption -= 1;
@@ -353,6 +405,7 @@ public class Phase extends JPanel implements ActionListener {
                 else if (tecla.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (selectedOption == 0) {
                         inGame = true;
+                        win = false;
                         showGameOver = false;
                         starting = false;
                         x1 = 0;
