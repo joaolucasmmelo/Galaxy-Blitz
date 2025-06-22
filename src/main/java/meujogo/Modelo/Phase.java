@@ -10,12 +10,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Phase extends JPanel implements ActionListener {
-    private final Image background, skull, gameoverPlayAgain, gameoverExit, gameStartPlay, gameStartExit, explosion;
+    private final Image background, skull, gameoverPlayAgain, gameoverGuide, gameoverExit, gameStartPlay, gameStartExit, gameStartGuide, guideScreen, explosion;
     private int x1, x2;
     private final Player player;
     private List<Enemy1> enemy1;
     private List<Heart> hearts;
     private boolean inGame;
+    private boolean guide;
     private boolean showGameOver;
     private boolean starting = true;
     private int selectedOption = 0;
@@ -33,9 +34,12 @@ public class Phase extends JPanel implements ActionListener {
         background = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\background.png").getImage();
         skull = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kills.png").getImage();
         gameoverPlayAgain = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over1.png").getImage();
-        gameoverExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over2.png").getImage();
+        gameoverGuide = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over2.png").getImage();
+        gameoverExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over3.png").getImage();
         gameStartPlay = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title1.png").getImage();
-        gameStartExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title2.png").getImage();
+        gameStartGuide = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title2.png").getImage();
+        gameStartExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title3.png").getImage();
+        guideScreen = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\guide_screen.png").getImage();
         explosion = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kbum.png").getImage();
         player = new Player();
         player.load();
@@ -62,7 +66,14 @@ public class Phase extends JPanel implements ActionListener {
         if (starting){
             if (selectedOption == 0) {
                 g.drawImage(gameStartPlay, 0, 0, null);
-            } else {
+            }
+            if (selectedOption == 1) {
+                g.drawImage(gameStartGuide, 0, 0, null);
+                if (guide){
+                    g.drawImage(guideScreen, 0, 0, null);
+                }
+            }
+            if (selectedOption == 2) {
                 g.drawImage(gameStartExit, 0, 0, null);
             }
         }
@@ -99,7 +110,14 @@ public class Phase extends JPanel implements ActionListener {
             if (showGameOver && !starting) {
                 if (selectedOption == 0) {
                     g.drawImage(gameoverPlayAgain, 0, 0, null);
-                } else {
+                }
+                if (selectedOption == 1){
+                    g.drawImage(gameoverGuide, 0, 0, null);
+                    if (guide){
+                        g.drawImage(guideScreen, 0, 0, null);
+                    }
+                }
+                if (selectedOption == 2){
                     g.drawImage(gameoverExit, 0, 0, null);
                 }
             }
@@ -322,11 +340,17 @@ public class Phase extends JPanel implements ActionListener {
     private class TecladoAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent tecla) {
             if (showGameOver) {
-                if (tecla.getKeyCode() == KeyEvent.VK_LEFT || tecla.getKeyCode() == KeyEvent.VK_A) {
-                    selectedOption = 0;
-                } else if (tecla.getKeyCode() == KeyEvent.VK_RIGHT || tecla.getKeyCode() == KeyEvent.VK_D) {
-                    selectedOption = 1;
-                } else if (tecla.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (tecla.getKeyCode() == KeyEvent.VK_LEFT || tecla.getKeyCode() == KeyEvent.VK_A && !guide) {
+                    if (selectedOption > 0){
+                        selectedOption -= 1;
+                    }
+                }
+                else if (tecla.getKeyCode() == KeyEvent.VK_RIGHT || tecla.getKeyCode() == KeyEvent.VK_D && !guide) {
+                    if (selectedOption < 2){
+                        selectedOption += 1;
+                    }
+                }
+                else if (tecla.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (selectedOption == 0) {
                         inGame = true;
                         showGameOver = false;
@@ -343,9 +367,16 @@ public class Phase extends JPanel implements ActionListener {
                         enemyInit();
 
                         repaint();
-                    } else {
+                    }
+                    if (selectedOption == 1) {
+                        guide = true;
+                    }
+                    if (selectedOption == 2) {
                         System.exit(0);
                     }
+                }
+                else if (guide && tecla.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    guide = false;
                 }
             } else {
                 player.keyPressed(tecla);
