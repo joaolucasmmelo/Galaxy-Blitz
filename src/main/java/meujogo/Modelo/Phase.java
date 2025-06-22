@@ -10,7 +10,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Phase extends JPanel implements ActionListener {
-    private final Image background, skull, gameoverPlayAgain, gameoverGuide, gameoverExit, gameWinPlay, gameWinGuide, gameWinExit, gameStartPlay, gameStartExit, gameStartGuide, guideScreen, explosion;
+    private final Image background, skull, gameoverPlayAgain, gameoverGuide, gameoverExit, gameWinPlay, gameWinGuide, gameWinExit,
+    gameStartPlay, gameStartExit, gameStartGuide, guideScreen, explosion;
+
     private int x1, x2;
     private final Player player;
     private List<Enemy1> enemy1;
@@ -20,12 +22,16 @@ public class Phase extends JPanel implements ActionListener {
     private boolean guide;
     private boolean showGameOver;
     private boolean starting = true;
+    private boolean winSoundVer = true;
+    private boolean gameOverSoundVer = true;
     private int selectedOption = 0;
     Integer kills = 0;
     long explosionTime;
 
     SoundPlayer explosionSound = new SoundPlayer();
     SoundPlayer enemyDieSound = new SoundPlayer();
+    SoundPlayer music = new SoundPlayer();
+    SoundPlayer gameOverSound = new SoundPlayer();
     SoundPlayer winSound = new SoundPlayer();
 
     public Phase() {
@@ -46,7 +52,6 @@ public class Phase extends JPanel implements ActionListener {
         gameWinExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\win3.png").getImage();
         guideScreen = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\guide_screen.png").getImage();
         explosion = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kbum.png").getImage();
-        winSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\win_sound.WAV");
         player = new Player();
         player.load();
 
@@ -116,6 +121,7 @@ public class Phase extends JPanel implements ActionListener {
             }
 
             if (!starting && !win && !inGame) {
+                music.stop();
                 player.setVelocidade(0);
                 displayEnemies(g);
                 displayHearts(g);
@@ -123,6 +129,11 @@ public class Phase extends JPanel implements ActionListener {
                 displayStats(g);
 
                 if (showGameOver) {
+                    if (gameOverSoundVer){
+                        gameOverSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\gameOver_sound.WAV");
+                        gameOverSoundVer = false;
+                    }
+
                     if (selectedOption == 0) {
                         g.drawImage(gameoverPlayAgain, 0, 0, null);
                     }
@@ -139,7 +150,12 @@ public class Phase extends JPanel implements ActionListener {
             }
 
             if (win && !starting) {
+                music.stop();
                 inGame = false;
+                if (winSoundVer){
+                    winSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\win_sound.WAV");
+                    winSoundVer = false;
+                }
 
                 if (selectedOption == 0) {
                     g.drawImage(gameWinPlay, 0, 0, null);
@@ -404,6 +420,9 @@ public class Phase extends JPanel implements ActionListener {
                 }
                 else if (tecla.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (selectedOption == 0) {
+                        music.playLoop("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\sound_track.WAV");
+                        gameOverSoundVer = true;
+                        winSoundVer = true;
                         inGame = true;
                         win = false;
                         showGameOver = false;
