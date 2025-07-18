@@ -2,6 +2,7 @@ package meujogo.Modelo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class SpecialShot {
     private Image powerShotIcon;
@@ -17,12 +18,11 @@ public class SpecialShot {
     public void load() {
         String imagePath;
         if (toggleFrame){
-            imagePath = "D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\power_shot0.png";
+            imagePath = "/Media/power_shot0.png";
+        } else {
+            imagePath = "/Media/power_shot1.png";
         }
-        else {
-            imagePath = "D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\power_shot1.png";
-        }
-        powerShotIcon = new ImageIcon(imagePath).getImage();
+        powerShotIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath))).getImage();
     }
 
     public void update() {
@@ -37,7 +37,7 @@ public class SpecialShot {
     public Rectangle getBounds() {
         int largura = powerShotIcon.getWidth(null);
         int altura = powerShotIcon.getHeight(null);
-        return new Rectangle(player.getX(), player.getY()+15, largura, altura);
+        return new Rectangle(player.getX(), player.getY() + 15, largura, altura);
     }
 
     public Image getPowerShotIcon() {

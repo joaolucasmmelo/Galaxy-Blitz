@@ -8,10 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 public class Phase extends JPanel implements ActionListener {
     private final Image background, skull, gameoverPlayAgain, gameoverGuide, gameoverExit, gameWinPlay, gameWinGuide, gameWinExit,
-    gameStartPlay, gameStartExit, gameStartGuide, guideScreen, explosion;
+            gameStartPlay, gameStartExit, gameStartGuide, guideScreen, explosion;
 
     private int x1, x2;
     private final Player player;
@@ -39,19 +40,19 @@ public class Phase extends JPanel implements ActionListener {
         setDoubleBuffered(true);
 
         showGameOver = false;
-        background = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\background.png").getImage();
-        skull = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kills.png").getImage();
-        gameoverPlayAgain = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over1.png").getImage();
-        gameoverGuide = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over2.png").getImage();
-        gameoverExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\game_over3.png").getImage();
-        gameStartPlay = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title1.png").getImage();
-        gameStartGuide = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title2.png").getImage();
-        gameStartExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\title3.png").getImage();
-        gameWinPlay = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\win1.png").getImage();
-        gameWinGuide = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\win2.png").getImage();
-        gameWinExit = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\win3.png").getImage();
-        guideScreen = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\guide_screen.png").getImage();
-        explosion = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\kbum.png").getImage();
+        background = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/background.png"))).getImage();
+        skull = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/kills.png"))).getImage();
+        gameoverPlayAgain = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/game_over1.png"))).getImage();
+        gameoverGuide = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/game_over2.png"))).getImage();
+        gameoverExit = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/game_over3.png"))).getImage();
+        gameStartPlay = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/title1.png"))).getImage();
+        gameStartGuide = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/title2.png"))).getImage();
+        gameStartExit = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/title3.png"))).getImage();
+        gameWinPlay = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/win1.png"))).getImage();
+        gameWinGuide = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/win2.png"))).getImage();
+        gameWinExit = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/win3.png"))).getImage();
+        guideScreen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/guide_screen.png"))).getImage();
+        explosion = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/kbum.png"))).getImage();
         player = new Player();
         player.load();
 
@@ -130,7 +131,7 @@ public class Phase extends JPanel implements ActionListener {
 
                 if (showGameOver) {
                     if (gameOverSoundVer){
-                        gameOverSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\gameOver_sound.WAV");
+                        gameOverSound.playSound("/Media/sounds/gameOver_sound.wav");
                         gameOverSoundVer = false;
                     }
 
@@ -153,7 +154,7 @@ public class Phase extends JPanel implements ActionListener {
                 music.stop();
                 inGame = false;
                 if (winSoundVer){
-                    winSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\win_sound.WAV");
+                    winSound.playSound("/Media/sounds/win_sound.wav");
                     winSoundVer = false;
                 }
 
@@ -303,7 +304,7 @@ public class Phase extends JPanel implements ActionListener {
             if (naveShape.intersects(enemy1Shape)){
                 if (player.getBoostAtivo()){
                     tempEnemy1.setVisible(false);
-                    enemyDieSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\enemyDie_sound.WAV");
+                    enemyDieSound.playSound("/Media/sounds/enemyDie_sound.wav");
                     kills += 1;
                     player.setKillsVer();
                 }
@@ -316,7 +317,7 @@ public class Phase extends JPanel implements ActionListener {
                         }
                         player.setVelocidade(0);
                         explosionTime = System.currentTimeMillis();
-                        explosionSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\explosion_sound.WAV");
+                        explosionSound.playSound("/Media/sounds/explosion_sound.wav");
                         inGame = false;
                     }
                 }
@@ -338,7 +339,7 @@ public class Phase extends JPanel implements ActionListener {
                     else{
                         tempEnemy1.setVisible(false);
                         tempShot.setVisible(false);
-                        enemyDieSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\enemyDie_sound.WAV");
+                        enemyDieSound.playSound("/Media/sounds/enemyDie_sound.wav");
                         kills += 1;
                         player.setKillsVer();
                     }
@@ -385,7 +386,7 @@ public class Phase extends JPanel implements ActionListener {
                 inGame = false;
                 player.setVelocidade(0);
                 explosionTime = System.currentTimeMillis();
-                explosionSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\explosion_sound.WAV");
+                explosionSound.playSound("/Media/sounds/explosion_sound.wav");
             }
         }
     }
@@ -395,8 +396,8 @@ public class Phase extends JPanel implements ActionListener {
         String ks = kills.toString();
 
         for (int i = 0; i < ks.length(); i++){
-            String pathN = "D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\numbers\\n" + (ks.charAt(i)) + ".png";
-            Image n = new ImageIcon(pathN).getImage();
+            String pathN = "/Media/numbers/n" + (ks.charAt(i)) + ".png";
+            Image n = new ImageIcon(Objects.requireNonNull(getClass().getResource(pathN))).getImage();
 
             g.drawImage(n, nextNumberPosition,17, this);
             if(ks.length() > 1){
@@ -420,7 +421,7 @@ public class Phase extends JPanel implements ActionListener {
                 }
                 else if (tecla.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (selectedOption == 0) {
-                        music.playLoop("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\sound_track.WAV");
+                        music.playLoop("/Media/sounds/sound_track.wav");
                         gameOverSoundVer = true;
                         winSoundVer = true;
                         inGame = true;

@@ -2,6 +2,7 @@ package meujogo.Modelo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class Shot {
     private Image shotIcon;
@@ -12,29 +13,29 @@ public class Shot {
     private static final int LARGURA = 1280;
     private static int VELOCIDADE = 20;
 
-     public Shot(int x, int y){
-         this.x = x-55;
-         this.y = y;
-         isVisible = true;
-     }
-
-    public Rectangle getBounds(){
-        return new  Rectangle(this.x, this.y, largura, altura);
+    public Shot(int x, int y) {
+        this.x = x - 55;
+        this.y = y;
+        isVisible = true;
     }
 
-     public void load() {
-         shotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\shot.png").getImage();
+    public Rectangle getBounds() {
+        return new Rectangle(this.x, this.y, largura, altura);
+    }
 
-         this.largura = shotIcon.getWidth(null);
-         this.altura = shotIcon.getHeight(null);
-     }
+    public void load() {
+        shotIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/shot.png"))).getImage();
 
-     public void update(){
-         this.x += VELOCIDADE;
-         if (this.x > LARGURA){
-             isVisible = false;
-         }
-     }
+        this.largura = shotIcon.getWidth(null);
+        this.altura = shotIcon.getHeight(null);
+    }
+
+    public void update() {
+        this.x += VELOCIDADE;
+        if (this.x > LARGURA) {
+            isVisible = false;
+        }
+    }
 
     public boolean isVisible() {
         return isVisible;

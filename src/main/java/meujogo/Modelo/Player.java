@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Player {
     private int x, y;
@@ -54,12 +55,12 @@ public class Player {
         specialShots = new ArrayList<>();
     }
 
-    public Rectangle getBounds(){
-        return new  Rectangle(this.x, this.y, 85, 35);
+    public Rectangle getBounds() {
+        return new Rectangle(this.x, this.y, 85, 35);
     }
 
     public void load() {
-        playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
+        playerIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/nave.png"))).getImage();
         altura = playerIcon.getHeight(null);
         largura = playerIcon.getWidth(null);
     }
@@ -84,7 +85,7 @@ public class Player {
             boostAtivo = true;
             gas--;
             boostsAtivos.add(new BoostInfo(now));
-            boostSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\boost_sound.WAV");
+            boostSound.playSound("/Media/sounds/boost_sound.wav");
         }
 
         List<BoostInfo> boostsParaRemover = new ArrayList<>();
@@ -103,47 +104,46 @@ public class Player {
 
         if (boostAtivo) {
             velocidade = 8;
-            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_blur.png").getImage();
-            boostIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\fire.png").getImage();
-        }
-        else {
+            playerIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/nave_blur.png"))).getImage();
+            boostIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/fire.png"))).getImage();
+        } else {
             velocidade = 4;
-            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
+            playerIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/nave.png"))).getImage();
             boostIcon = null;
         }
 
         if (!verLife && System.currentTimeMillis() - lastLifeLossTime >= 2000) {
             verLife = true;
-            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave.png").getImage();
+            playerIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/nave.png"))).getImage();
         }
-        if (!verLife){
-            if (verDamageSound){
-                damageSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\damage_sound.WAV");
+        if (!verLife) {
+            if (verDamageSound) {
+                damageSound.playSound("/Media/sounds/damage_sound.wav");
                 verDamageSound = false;
             }
-            playerIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\nave_damage.png").getImage();
+            playerIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/nave_damage.png"))).getImage();
         }
 
-        if (duringSpecial){
+        if (duringSpecial) {
             velocidade = 2;
-            if ((now - specialStartTime) > 5000){
+            if ((now - specialStartTime) > 5000) {
                 duringSpecial = false;
                 killsVer = 0;
             }
         }
     }
 
-    public void simpleShot(){
-        if (!boostAtivo){
-            this.shots.add(new Shot(x+largura, y + (altura/2)));
-            shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\shot_sound.WAV");
+    public void simpleShot() {
+        if (!boostAtivo) {
+            this.shots.add(new Shot(x + largura, y + (altura / 2)));
+            shotSound.playSound("/Media/sounds/shot_sound.wav");
         }
     }
 
     public void specialShot() {
-        if (!boostAtivo){
+        if (!boostAtivo) {
             this.specialShots.add(new SpecialShot(this));
-            shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\powerShot_sound.WAV");
+            shotSound.playSound("/Media/sounds/powerShot_sound.wav");
         }
     }
 
@@ -154,14 +154,12 @@ public class Player {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = true;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = true;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = true;
-        if (code == KeyEvent.VK_SHIFT && !duringSpecial){
-            shift = true;
-        }
-        if (code == KeyEvent.VK_P && !shotCountVer && !duringSpecial){
+        if (code == KeyEvent.VK_SHIFT && !duringSpecial) shift = true;
+        if (code == KeyEvent.VK_P && !shotCountVer && !duringSpecial) {
             simpleShot();
             shotCountVer = true;
         }
-        if (code == KeyEvent.VK_SPACE && specialReady && !boostAtivo){
+        if (code == KeyEvent.VK_SPACE && specialReady && !boostAtivo) {
             specialShot();
             duringSpecial = true;
             specialStartTime = System.currentTimeMillis();
@@ -177,63 +175,24 @@ public class Player {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = false;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = false;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = false;
-        if (code == KeyEvent.VK_SHIFT){
-            shift = false;
-        }
+        if (code == KeyEvent.VK_SHIFT) shift = false;
         if (code == KeyEvent.VK_P) shotCountVer = false;
     }
 
-    public void checkGasStatus(){
-        if (gas == 3){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_3.png").getImage();
-        }
-        if (gas == 2){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_2.png").getImage();
-        }
-        if (gas == 1){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_1.png").getImage();
-        }
-        if (gas == 0){
-            gasIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\gas_0.png").getImage();
-        }
+    public void checkGasStatus() {
+        gasIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/gas_" + gas + ".png"))).getImage();
     }
 
-    public void checkLife(){
-        if (life == 3){
-            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life3.png").getImage();
-        }
-        if (life == 2){
-            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life2.png").getImage();
-        }
-        if (life == 1){
-            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life1.png").getImage();
-        }
-        if (life == 0){
-            lifeIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\life0.png").getImage();
-        }
+    public void checkLife() {
+        lifeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/life" + life + ".png"))).getImage();
     }
 
-    public void checkSpecialStatus(){
-        if (0 <= killsVer && killsVer < 8){
-            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar0.png").getImage();
-        }
-        if (8 <= killsVer && killsVer < 16){
-            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar1.png").getImage();
-        }
-        if (16 <= killsVer && killsVer < 24){
-            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar2.png").getImage();
-        }
-        if (24 <= killsVer && killsVer < 32){
-            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar3.png").getImage();
-        }
-        if (32 <= killsVer && killsVer < 40){
-            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar4.png").getImage();
-        }
-        if (40 <= killsVer){
-            specialBarIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\specialbar5.png").getImage();
-            if (!specialReady){
-                shotSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\ready_sound.wav");
-            }
+    public void checkSpecialStatus() {
+        int index = Math.min(killsVer / 8, 5);
+        specialBarIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/specialbar" + index + ".png"))).getImage();
+
+        if (killsVer >= 40 && !specialReady) {
+            shotSound.playSound("/Media/sounds/ready_sound.wav");
             specialReady = true;
         }
     }
@@ -270,14 +229,15 @@ public class Player {
         }
     }
 
-    public void gainLife(){
+    public void gainLife() {
         this.life += 1;
-        heartSound.playSound("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\sounds\\heart_sound.WAV");
+        heartSound.playSound("/Media/sounds/heart_sound.wav");
     }
 
     public int getLife() {
         return this.life;
     }
+
     public boolean getBoostAtivo() {
         return boostAtivo;
     }
@@ -294,7 +254,7 @@ public class Player {
         return y;
     }
 
-    public void setVelocidade(int velocidade){
+    public void setVelocidade(int velocidade) {
         this.velocidade = velocidade;
     }
 

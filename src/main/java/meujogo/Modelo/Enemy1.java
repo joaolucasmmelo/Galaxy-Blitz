@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Enemy1 {
     private Image enemy1Icon;
@@ -17,7 +18,7 @@ public class Enemy1 {
     private List<Shot> enemy1Shots;
     private long lastShotTime = System.currentTimeMillis();
 
-    public Enemy1(int x, int y){
+    public Enemy1(int x, int y) {
         this.life = 2;
         this.x = x;
         this.y = y;
@@ -25,19 +26,19 @@ public class Enemy1 {
         enemy1Shots = new ArrayList<>();
     }
 
-    public Rectangle getBounds(){
-         return new  Rectangle(this.x, this.y, 80, 50);
+    public Rectangle getBounds() {
+        return new Rectangle(this.x, this.y, 80, 50);
     }
 
     public void load() {
-        if (this.life == 2){
-            enemy1Icon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy1.png").getImage();
+        if (this.life == 2) {
+            enemy1Icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/enemy1.png"))).getImage();
         }
-        if (this.life == 1){
-            enemy1Icon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy11.png").getImage();
+        if (this.life == 1) {
+            enemy1Icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/enemy11.png"))).getImage();
         }
 
-        enemy1ShotIcon = new ImageIcon("D:\\Java\\Projects\\Galaxy Blitz\\src\\Media\\enemy_shot.png").getImage();
+        enemy1ShotIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Media/enemy_shot.png"))).getImage();
 
         this.largura = enemy1Icon.getWidth(null);
         this.altura = enemy1Icon.getHeight(null);
@@ -45,11 +46,11 @@ public class Enemy1 {
 
     public void update() {
         this.x -= velocidade;
-        if (this.x < -85){
+        if (this.x < -85) {
             this.isVisible = false;
         }
 
-        //tiros inimigos para depois
+        // tiros inimigos
         if (x >= 0 && x <= 1280) {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastShotTime >= 2000) {
@@ -59,8 +60,8 @@ public class Enemy1 {
         }
     }
 
-    public void simpleShot(){
-         this.enemy1Shots.add(new Shot(x+largura, y + (altura/2)));
+    public void simpleShot() {
+        this.enemy1Shots.add(new Shot(x + largura, y + (altura / 2)));
     }
 
     public boolean isVisible() {
@@ -75,11 +76,11 @@ public class Enemy1 {
         this.velocidade = velocidade;
     }
 
-    public void setLife(int life){
+    public void setLife(int life) {
         this.life = life;
     }
 
-    public int getLife(){
+    public int getLife() {
         return this.life;
     }
 
