@@ -1,6 +1,6 @@
 ---
 title: Galaxy Blitz
-description: Um shooter espacial em Java com design limpo, jogabilidade intensa e estrutura modular.
+description: A space shooter in pure Java with clean design, intense gameplay, and modular structure.
 authors:
   - name: João Lucas Melo
     url: https://github.com/joaolucasmmelo
@@ -8,31 +8,31 @@ authors:
 
 # 🚀 Galaxy Blitz
 
-**Galaxy Blitz** é um jogo de **space shooter** desenvolvido em **Java puro**, com foco em desempenho, jogabilidade fluida e estrutura de código modular. Ideal para quem quer entender como fazer um game 2D do zero usando apenas a linguagem Java.
+**Galaxy Blitz** is a **space shooter** game developed entirely in **pure Java**, focusing on performance, smooth gameplay, and a modular code structure. Ideal for those who want to understand how to build a 2D game from scratch using only the Java language.
 
 ---
 
-## 🎮 Jogabilidade
+## 🎮 Gameplay
 
-- Mova a nave com: `W`, `A`, `S`, `D`
-- Boost com: `SHIFT`
-- Atire com: `P` e `ESPAÇO`
-- Enfrente ondas de inimigos, desvie de tiros, colete power-ups e marque pontos
-
----
-
-## 🧰 Tecnologias Utilizadas
-
-- **Java AWT/Swing** — para renderização gráfica
-- **Threads** — controle de loop de jogo em tempo real
-- **KeyListener** — detecção de eventos de teclado
-- **Canvas & Graphics2D** — renderização 2D
-- **Gestão de colisão** — via `Rectangle.intersects(...)`
-- **Recursos visuais e sonoros** — carregados com `getResourceAsStream()`
+- Move the ship using: `W`, `A`, `S`, `D`
+- Boost with: `SHIFT`
+- Shoot with: `P` and `SPACE`
+- Face waves of enemies, dodge bullets, collect power-ups, and score points
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🧰 Technologies Used
+
+- **Java AWT/Swing** — for graphical rendering
+- **Threads** — real-time game loop control
+- **KeyListener** — keyboard input detection
+- **Canvas & Graphics2D** — 2D rendering
+- **Collision management** — using `Rectangle.intersects(...)`
+- **Visual and sound resources** — loaded with `getResourceAsStream()`
+
+---
+
+## 📁 Project Structure
 
 ```
 ├── src/
@@ -57,19 +57,19 @@ authors:
 
 ---
 
-## ⚙️ Como Rodar
-### Execução no terminal
-Essa execução roda o jogo completo com som.
+## ⚙️ How to Run
+### Run via terminal
+This method runs the complete game with sound.
 
 ---
 
-### Executar o start.bat
-essa execução é a mais simples porém não foi completamente desenvolvida, 
-fazendo o jogo rodar sem som.
+### Run `start.bat`
+This is the simplest way to launch the game, but it was not fully developed,
+causing the game to run without sound.
 
 ---
 
-### Compilação Manual
+### Manual Compilation
 
 ```bash
 javac -d bin src/meujogo/**/*.java
@@ -78,26 +78,26 @@ java -cp bin meujogo.principalmain.Main
 
 ---
 
-## 📦 Criando o `.jar` Executável
+## 📦 Creating the `.jar` Executable
 
-### 1. Crie o Manifest
+### 1. Create the Manifest
 
-Arquivo `manifest.txt`:
+File `manifest.txt`:
 
 ```
 Main-Class: meujogo.principalmain.Main
 Class-Path: .
 ```
 
-(*linha em branco no final é obrigatória*)
+(*a blank line at the end is required*)
 
-### 2. Gere o JAR
+### 2. Generate the JAR
 
 ```bash
 jar cfm GalaxyBlitz.jar manifest.txt -C bin .
 ```
 
-### 3. Rode o Jogo
+### 3. Run the Game
 
 ```bash
 java -jar GalaxyBlitz.jar
@@ -105,37 +105,37 @@ java -jar GalaxyBlitz.jar
 
 ---
 
-## 🌠 Recursos Planejados
+## 🌠 Planned Features
 
-- Música de fundo
-- Efeitos sonoros
-- Múltiplas fases
-- Ataque dos inimigos
-- Sistema de score
+- Background music
+- Sound effects
+- Multiple levels
+- Enemy attacks
+- Score system
 
 ---
 
-## 👤 Autor
+## 👤 Author
 
 **João Lucas Melo**  
 GitHub: [@joaolucasmmelo](https://github.com/joaolucasmmelo)
 
 ---
 
-## 📜 Licença
+## 📜 License
 
-Distribuído sob licença MIT. Veja `LICENSE` para mais detalhes.
-
----
-
-## ⭐ Contribua
-
-Se você curtiu o projeto:
-
-- Deixe uma ⭐ no repositório!
-- Reporte bugs e envie melhorias via Pull Request
-- Compartilhe com amigos desenvolvedores 🚀
+Distributed under the MIT License. See `LICENSE` for more details.
 
 ---
 
-**Boas batalhas no espaço!** 🛸👾
+## ⭐ Contribute
+
+If you enjoyed the project:
+
+- Leave a ⭐ on the repository!
+- Report bugs and submit improvements via Pull Request
+- Share with fellow developers 🚀
+
+---
+
+**Good battles in space!** 🛸👾
